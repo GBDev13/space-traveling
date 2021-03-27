@@ -5,7 +5,7 @@ import Prismic from '@prismicio/client';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Link from 'next/link';
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { getPrismicClient } from '../services/prismic';
 
 import commonStyles from '../styles/common.module.scss';
@@ -31,7 +31,7 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-export default function Home({ postsPagination }: HomeProps) {
+export default function Home({ postsPagination }: HomeProps): ReactElement {
   const formattedPost = postsPagination.results.map(post => {
     return {
       uid: post.uid,
@@ -148,7 +148,6 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   });
 
-  console.log(postsResponse);
   const postsPagination = {
     next_page: postsResponse.next_page,
     results: posts,
