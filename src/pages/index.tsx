@@ -34,7 +34,7 @@ interface HomeProps {
 export default function Home({ postsPagination }: HomeProps): ReactElement {
   const formattedPost = postsPagination.results.map(post => {
     return {
-      uid: post.uid,
+      ...post,
       first_publication_date: format(
         new Date(post.first_publication_date),
         'dd MMM yyyy',
@@ -42,11 +42,6 @@ export default function Home({ postsPagination }: HomeProps): ReactElement {
           locale: ptBR,
         }
       ),
-      data: {
-        title: post.data.title,
-        subtitle: post.data.subtitle,
-        author: post.data.author,
-      },
     };
   });
 
@@ -132,7 +127,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const postsResponse = await prismic.query(
     [Prismic.Predicates.at('document.type', 'posts')],
     {
-      pageSize: 2,
+      pageSize: 1,
     }
   );
 
