@@ -124,7 +124,7 @@ export default function Home({
         {preview && (
           <aside>
             <Link href="/api/exit-preview">
-              <a className={styles.preview}>Sair do modo Preview</a>
+              <a className={commonStyles.preview}>Sair do modo Preview</a>
             </Link>
           </aside>
         )}
@@ -133,17 +133,14 @@ export default function Home({
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({
-  preview = false,
-  previewData,
-}) => {
+export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const prismic = getPrismicClient();
 
   const postsResponse = await prismic.query(
     [Prismic.Predicates.at('document.type', 'posts')],
     {
-      pageSize: 1,
-      ref: previewData?.ref ?? null,
+      pageSize: 3,
+      orderings: '[document.last_publication_date desc]',
     }
   );
 

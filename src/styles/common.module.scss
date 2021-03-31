@@ -2,3 +2,18 @@
   max-width: 700px;
   margin:4rem auto;
 }
+
+.preview {
+  display: block;
+  width:100%;
+  max-width: 700px;
+  margin: 0 auto;
+  margin-top: 5.5rem;
+  background:var(--heading);
+  color:var(--background);
+  text-align:center;
+  border-radius: 4px;
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+}

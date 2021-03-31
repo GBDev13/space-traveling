@@ -19,6 +19,11 @@ export default class Comments extends Component<ReactElement> {
   }
 
   render() {
-    return <div id="inject-comments-for-uterances" />;
+    return (
+      <div
+        id="inject-comments-for-uterances"
+        style={{ marginBottom: '4rem' }}
+      />
+    );
   }
 }
