@@ -1,6 +1,9 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-assign */
+/* eslint-disable react/no-danger */
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-import { FiCalendar, FiUser } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 import Prismic from '@prismicio/client';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -19,6 +22,13 @@ interface Post {
     title: string;
     subtitle: string;
     author: string;
+    readTime: number;
+    content: {
+      heading: string;
+      body: {
+        text: string;
+      }[];
+    }[];
   };
 }
 
@@ -36,9 +46,26 @@ export default function Home({
   postsPagination,
   preview,
 }: HomeProps): ReactElement {
+  function getReadTime(item: Post): number {
+    const totalWords = item.data.content.reduce((total, contentItem) => {
+      total += contentItem.heading.split(' ').length;
+
+      const words = contentItem.body.map(i => i.text.split(' ').length);
+      words.map(word => (total += word));
+      return total;
+    }, 0);
+    return Math.ceil(totalWords / 200);
+  }
+
   const formattedPost = postsPagination.results.map(post => {
+    const readTime = getReadTime(post);
+
     return {
       ...post,
+      data: {
+        ...post.data,
+        readTime,
+      },
       first_publication_date: format(
         new Date(post.first_publication_date),
         'dd MMM yyyy',
@@ -64,7 +91,9 @@ export default function Home({
     setNextPage(postsResults.next_page);
     setCurrentPage(postsResults.page);
 
-    const newPosts = postsResults.results.map(post => {
+    const newPosts = postsResults.results.map((post: Post) => {
+      const readTime = getReadTime(post);
+
       return {
         uid: post.uid,
         first_publication_date: format(
@@ -78,6 +107,7 @@ export default function Home({
           title: post.data.title,
           subtitle: post.data.subtitle,
           author: post.data.author,
+          readTime,
         },
       };
     });
@@ -108,6 +138,10 @@ export default function Home({
                   <li>
                     <FiUser />
                     {post.data.author}
+                  </li>
+                  <li>
+                    <FiClock />
+                    {`${post.data.readTime} min`}
                   </li>
                 </ul>
               </a>
@@ -152,6 +186,12 @@ export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
         title: post.data.title,
         subtitle: post.data.subtitle,
         author: post.data.author,
+        content: post.data.content.map(content => {
+          return {
+            heading: content.heading,
+            body: [...content.body],
+          };
+        }),
       },
     };
   });
