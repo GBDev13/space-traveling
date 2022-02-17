@@ -8,10 +8,9 @@ import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/router';
 import Prismic from '@prismicio/client';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
+import Head from 'next/head';
 import Header from '../../components/Header';
-
 import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
@@ -98,6 +97,9 @@ export default function Post({
 
   return (
     <>
+      <Head>
+        <title>SpaceTraveling | {post.data.title}</title>
+      </Head>
       <Header />
       <img src={post.data.banner.url} alt="imagem" className={styles.banner} />
       <main className={commonStyles.container}>
